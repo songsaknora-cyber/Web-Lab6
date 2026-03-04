@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 50px;
+    }
+
+    input {
+      display: block;
+      margin-bottom: 10px;
+      padding: 5px;
+      width: 200px;
+    }
+
+    button {
+      padding: 8px 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Login</h1>
+
+  <label for="username">Username:</label>
+  <input type="text" id="username" placeholder="Enter your username">
+
+  <button onclick="login()">Login</button>
+
+  <script>
+    function login() {
+      // Step 1: Get the username from the input field
+      let username = document.getElementById("username").value;
+
+      // Step 2: Save the username in a cookie
+      document.cookie = "username=" + username;
+
+      // Step 3: Redirect to register.html
+      window.location.href = "register.html";
+    }
+  </script>
+
+</body>
+</html>

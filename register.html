@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 50px;
+    }
+
+    input {
+      display: block;
+      margin-bottom: 10px;
+      padding: 5px;
+      width: 200px;
+    }
+
+    button {
+      padding: 8px 16px;
+      margin-bottom: 30px;
+    }
+
+    table {
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid black;
+      padding: 8px 12px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Register</h1>
+
+  <label for="fullName">Full Name:</label>
+  <input type="text" id="fullName" placeholder="Enter your full name">
+
+  <label for="email">Email:</label>
+  <input type="text" id="email" placeholder="Enter your email">
+
+  <label for="phone">Phone:</label>
+  <input type="text" id="phone" placeholder="Enter your phone number">
+
+  <button onclick="submitForm()">Submit</button>
+
+  <h2>Registered Users</h2>
+  <table id="usersTable">
+    <tr>
+      <th>Full Name</th>
+      <th>Email</th>
+      <th>Phone</th>
+    </tr>
+  </table>
+
+  <script>
+
+    // -----------------------------------------------
+    // STEP 1: Check if the username cookie exists
+    // -----------------------------------------------
+
+    // This function reads all cookies and looks for a specific one by name
+    function getCookie(name) {
+      let allCookies = document.cookie;           // e.g. "username=John; theme=dark"
+      let cookieList = allCookies.split("; ");    // split into ["username=John", "theme=dark"]
+
+      for (let i = 0; i < cookieList.length; i++) {
+        let oneCookie = cookieList[i].split("="); // split into ["username", "John"]
+        if (oneCookie[0] === name) {
+          return oneCookie[1];                    // return the value
+        }
+      }
+
+      return null; // cookie not found
+    }
+
+    // Check cookie when the page loads
+    let username = getCookie("username");
+
+    if (username === null || username === "") {
+      // No cookie found — redirect back to login
+      alert("You are not logged in! Redirecting to login page.");
+      window.location.href = "login.html";
+    }
+
+
+    // -----------------------------------------------
+    // STEP 2: Submit the form and save to localStorage
+    // -----------------------------------------------
+
+    function submitForm() {
+      // Get values from input fields
+      let fullName = document.getElementById("fullName").value;
+      let email    = document.getElementById("email").value;
+      let phone    = document.getElementById("phone").value;
+
+      // Create a user object
+      let newUser = {
+        fullName: fullName,
+        email: email,
+        phone: phone
+      };
+
+      // Get the existing users array from localStorage (or start with an empty array)
+      let usersArray = JSON.parse(localStorage.getItem("users")) || [];
+
+      // Add the new user to the array
+      usersArray.push(newUser);
+
+      // Save the updated array back to localStorage
+      localStorage.setItem("users", JSON.stringify(usersArray));
+
+      // Clear the input fields
+      document.getElementById("fullName").value = "";
+      document.getElementById("email").value    = "";
+      document.getElementById("phone").value    = "";
+
+      // Refresh the table
+      displayUsers();
+    }
+
+
+    // -----------------------------------------------
+    // STEP 3: Display stored users in the table
+    // -----------------------------------------------
+
+    function displayUsers() {
+      // Get users array from localStorage
+      let usersArray = JSON.parse(localStorage.getItem("users")) || [];
+
+      // Get the table element
+      let table = document.getElementById("usersTable");
+
+      // Clear old rows (keep the header row)
+      table.innerHTML = `
+        <tr>
+          <th>Full Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+        </tr>
+      `;
+
+      // Loop through users and add a row for each one
+      for (let i = 0; i < usersArray.length; i++) {
+        let user = usersArray[i];
+
+        let row = "<tr>";
+        row += "<td>" + user.fullName + "</td>";
+        row += "<td>" + user.email    + "</td>";
+        row += "<td>" + user.phone    + "</td>";
+        row += "</tr>";
+
+        table.innerHTML += row;
+      }
+    }
+
+    // Show users when the page first loads
+    displayUsers();
+
+  </script>
+
+</body>
+</html>
